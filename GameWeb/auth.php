@@ -54,7 +54,11 @@ function getAccounts($connection): array
 {
     $result = pg_query(
         $connection,
-        'SELECT "user" AS name, COALESCE(score, 0) AS score
+        'SELECT "user" AS name, COALESCE(score, 0) AS score,
+                CASE
+                    WHEN "isAdmin"::text IN (\'1\', \'true\', \'t\') THEN TRUE
+                    ELSE FALSE
+                END AS is_admin
          FROM users
          ORDER BY score DESC NULLS LAST, "user" ASC'
     );
@@ -67,6 +71,7 @@ function getAccounts($connection): array
         $accounts[] = [
             'name' => $entry['name'],
             'score' => (int) $entry['score'],
+            'isAdmin' => $entry['is_admin'] === 't',
         ];
     }
     return $accounts;

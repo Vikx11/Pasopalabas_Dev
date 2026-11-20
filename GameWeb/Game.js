@@ -88,7 +88,9 @@ function renderLeaderboardList(listElement, entries = leaderboard, accountManage
 
 			const details = document.createElement("span");
 			details.className = "entry-details";
-			details.textContent = `${entry.score} pts`;
+			details.textContent = accountManagement && entry.isAdmin
+				? "Admin"
+				: `${entry.score} pts`;
 
 			item.append(rank, nameDisplay);
 			item.append(details);
